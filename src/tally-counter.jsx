@@ -6,7 +6,8 @@ const TallyCounter = React.createClass({
     mixins: [tweenState.Mixin],
 
     getInitialState: () => ({
-        tally: 0,
+        newTally: 0,
+        oldTally: 0,
     }),
 
     componentDidMount() {
@@ -16,15 +17,30 @@ const TallyCounter = React.createClass({
     setNewTicketCount() {
         const newTally = Math.floor(Math.random() * 1000);
 
-        this.tweenState("tally", {
+        this.tweenState("newTally", {
             duration: 2000,
             endValue: newTally,
+            onEnd: () => {
+                this.setState({
+                    oldTally: newTally,
+                });
+            },
         });
     },
 
+    deriveCounterMovement(newTally, oldTally) {
+        return newTally === oldTally ? "none" : newTally > oldTally ? "up" : "down";
+    },
+
     render() {
+        const count = Math.floor(this.getTweeningValue("newTally"));
+
         const counterProps = {
-            count: Math.floor(this.getTweeningValue("tally")),
+            thousands: Math.floor((count % 10000) / 1000),
+            hundreds: Math.floor((count / 100) % 10),
+            tens: Math.floor((count / 10) % 10),
+            units: Math.floor(count % 10),
+            movement: this.deriveCounterMovement(this.state.newTally, this.state.oldTally),
         };
 
         return (
