@@ -11,10 +11,10 @@ const TallyCounter = React.createClass({
     }),
 
     componentDidMount() {
-        this.timer = setInterval(this.setNewTicketCount, 1000 * 5);
+        this.timer = setInterval(this.setNewTally, 1000 * 5);
     },
 
-    setNewTicketCount() {
+    setNewTally() {
         const newTally = Math.floor(Math.random() * 1000);
 
         this.tweenState("newTally", {
