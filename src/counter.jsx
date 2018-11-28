@@ -6,7 +6,7 @@ const Counter = React.createClass({
             ? 0
             : movement === "up"
             ? -Math.abs((height / 10) * subDivision)
-            : Math.abs((height / 10) * subDivision) - height;
+            : Math.abs((height / 10) * (subDivision - 10)) - height;
     },
 
     calculateStripPositions(state, height) {
@@ -39,12 +39,12 @@ const Counter = React.createClass({
             },
         };
 
-        const digitHeight = 30;
+        const digitHeight = 60;
         const stripPositions = this.calculateStripPositions(this.props, digitHeight);
 
         const digitStyle = {
             height: `{digitHeight}px`,
-            fontSize: "30px",
+            fontSize: "60px",
         };
 
         return (
