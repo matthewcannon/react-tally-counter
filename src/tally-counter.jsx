@@ -45,7 +45,6 @@ const TallyCounter = React.createClass({
 
         return (
             <div>
-                <h2>Tally counter</h2>
                 <Counter {...counterProps} />
             </div>
         );
