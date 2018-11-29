@@ -44,7 +44,7 @@ const Counter = React.createClass({
 
         const digitStyle = {
             height: `{digitHeight}px`,
-            fontSize: "60px",
+            fontSize: digitHeight + "px",
         };
 
         return (

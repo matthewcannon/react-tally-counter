@@ -18,7 +18,7 @@ const TallyCounter = React.createClass({
         const newTally = Math.floor(Math.random() * 5000);
 
         this.tweenState("newTally", {
-            duration: 3000,
+            duration: 2000,
             endValue: newTally,
             onEnd: () => {
                 this.setState({
