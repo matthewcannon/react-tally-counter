@@ -50,15 +50,16 @@ const Counter = React.createClass({
             },
         };
 
-        const movement = this.deriveMovement(this.props.toCount, this.props.fromCount);
         const digitHeight = 60;
-        const stripPositions = this.calculateStripPositions(movement, currentDivisions, digitHeight);
 
         const digitStyle = {
             height: `{digitHeight}px`,
             // Can't use string interpolation on a React CSS property name if the original CSS property is hyphenated (in this case "font-size").
             fontSize: digitHeight + "px",
         };
+
+        const movement = this.deriveMovement(this.props.toCount, this.props.fromCount);
+        const stripPositions = this.calculateStripPositions(movement, currentDivisions, digitHeight);
 
         return (
             <div>

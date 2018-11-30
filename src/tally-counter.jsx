@@ -16,14 +16,14 @@ const TallyCounter = React.createClass({
     },
 
     setNewTally() {
-        const newTally = Math.floor(Math.random() * 100);
+        const newTally = Math.floor(Math.random() * 5000);
 
         this.setState({
             newTally: newTally,
         });
 
         this.tweenState("tweenTally", {
-            duration: 4000,
+            duration: 3000,
             endValue: newTally,
             onEnd: () => {
                 this.setState({
