@@ -8,17 +8,22 @@ const TallyCounter = React.createClass({
     getInitialState: () => ({
         newTally: 0,
         oldTally: 0,
+        tweenTally: 0,
     }),
 
     componentDidMount() {
-        this.timer = setInterval(this.setNewTally, 1000 * 4);
+        this.timer = setInterval(this.setNewTally, 1000 * 5);
     },
 
     setNewTally() {
-        const newTally = Math.floor(Math.random() * 5000);
+        const newTally = Math.floor(Math.random() * 100);
 
-        this.tweenState("newTally", {
-            duration: 2000,
+        this.setState({
+            newTally: newTally,
+        });
+
+        this.tweenState("tweenTally", {
+            duration: 4000,
             endValue: newTally,
             onEnd: () => {
                 this.setState({
@@ -28,19 +33,11 @@ const TallyCounter = React.createClass({
         });
     },
 
-    deriveCounterMovement(newTally, oldTally) {
-        return newTally === oldTally ? "none" : newTally > oldTally ? "up" : "down";
-    },
-
     render() {
-        const count = Math.floor(this.getTweeningValue("newTally"));
-
         const counterProps = {
-            thousands: Math.floor((count % 10000) / 1000),
-            hundreds: Math.floor((count / 100) % 10),
-            tens: Math.floor((count / 10) % 10),
-            units: Math.floor(count % 10),
-            movement: this.deriveCounterMovement(this.state.newTally, this.state.oldTally),
+            currentCount: Math.floor(this.getTweeningValue("tweenTally")),
+            fromCount: this.state.oldTally,
+            toCount: this.state.newTally,
         };
 
         return (
