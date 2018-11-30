@@ -1,24 +1,33 @@
 import React from "react";
 
 const Counter = React.createClass({
-    calculateStripPosition(movement, subDivision, height) {
+    calculateStripPosition(movement, subDivision, range) {
         return movement === "none"
             ? 0
             : movement === "up"
-            ? -Math.abs((height / 10) * subDivision)
-            : Math.abs((height / 10) * (subDivision - 10)) - height;
+            ? -Math.abs((range / 10) * subDivision)
+            : Math.abs((range / 10) * (subDivision - 10)) - range;
     },
 
-    calculateStripPositions(movement, divisions, height) {
+    calculateStripPositions(currentDivisions, targetDivisions, movement, range) {
         return {
-            thousands: this.calculateStripPosition(movement, divisions.hundreds, height),
-            hundreds: this.calculateStripPosition(movement, divisions.tens, height),
-            tens: this.calculateStripPosition(movement, divisions.units, height),
+            thousands:
+                targetDivisions.thousands === currentDivisions.thousands
+                    ? 0
+                    : this.calculateStripPosition(movement, currentDivisions.hundreds, range),
+            hundreds:
+                targetDivisions.hundreds == currentDivisions.hundreds
+                    ? 0
+                    : this.calculateStripPosition(movement, currentDivisions.tens, range),
+            tens:
+                targetDivisions.tens === currentDivisions.tens
+                    ? 0
+                    : this.calculateStripPosition(movement, currentDivisions.units, range),
         };
     },
 
-    deriveMovement(toCount, fromCount) {
-        return toCount === fromCount ? "none" : toCount > fromCount ? "up" : "down";
+    deriveMovement(oldCount, targetCount) {
+        return oldCount === targetCount ? "none" : oldCount > targetCount ? "up" : "down";
     },
 
     render() {
@@ -27,6 +36,13 @@ const Counter = React.createClass({
             hundreds: Math.floor((this.props.currentCount / 100) % 10),
             tens: Math.floor((this.props.currentCount / 10) % 10),
             units: Math.floor(this.props.currentCount % 10),
+        };
+
+        const targetDivisions = {
+            thousands: Math.floor((this.props.targetCount % 10000) / 1000),
+            hundreds: Math.floor((this.props.targetCount / 100) % 10),
+            tens: Math.floor((this.props.targetCount / 10) % 10),
+            units: Math.floor(this.props.targetCount % 10),
         };
 
         const roll = {
@@ -58,8 +74,8 @@ const Counter = React.createClass({
             fontSize: digitHeight + "px",
         };
 
-        const movement = this.deriveMovement(this.props.toCount, this.props.fromCount);
-        const stripPositions = this.calculateStripPositions(movement, currentDivisions, digitHeight);
+        const movement = this.deriveMovement(this.props.oldCount, this.props.targetCount);
+        const stripPositions = this.calculateStripPositions(currentDivisions, targetDivisions, movement, digitHeight);
 
         return (
             <div>
@@ -114,8 +130,8 @@ const Counter = React.createClass({
 
 Counter.propTypes = {
     currentCount: React.PropTypes.number.isRequired,
-    fromCount: React.PropTypes.number.isRequired,
-    toCount: React.PropTypes.number.isRequired,
+    oldCount: React.PropTypes.number.isRequired,
+    targetCount: React.PropTypes.number.isRequired,
 };
 
 export default Counter;

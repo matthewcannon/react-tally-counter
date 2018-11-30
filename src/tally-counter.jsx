@@ -36,8 +36,8 @@ const TallyCounter = React.createClass({
     render() {
         const counterProps = {
             currentCount: Math.floor(this.getTweeningValue("tweenTally")),
-            fromCount: this.state.oldTally,
-            toCount: this.state.newTally,
+            oldCount: this.state.oldTally,
+            targetCount: this.state.newTally,
         };
 
         return (
