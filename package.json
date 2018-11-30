@@ -18,7 +18,7 @@
         "lint": "eslint --ext .js --ext .jsx ./src test",
         "pack": "webpack --mode development --entry ./src/index.jsx --output ./public/bundle.js",
         "prelint": "npm run prettier",
-        "prettier": "prettier --write {./src/**/*,test/**/*,*}.{js,jsx,json}",
+        "prettier": "prettier --write {./src/**/*,./test/**/*,*}.{js,jsx,json}",
         "rebuild": "npm run clean && npm run build",
         "sass": "node-sass ./src/style/ --output-style compressed --output ./public/",
         "serve": "live-server ./public",
