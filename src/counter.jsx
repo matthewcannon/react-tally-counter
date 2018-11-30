@@ -9,11 +9,11 @@ const Counter = React.createClass({
             : Math.abs((height / 10) * (subDivision - 10)) - height;
     },
 
-    calculateStripPositions(state, height) {
+    calculateStripPositions(movement, divisions, height) {
         return {
-            thousands: this.calculateStripPosition(state.movement, state.hundreds, height),
-            hundreds: this.calculateStripPosition(state.movement, state.tens, height),
-            tens: this.calculateStripPosition(state.movement, state.units, height),
+            thousands: this.calculateStripPosition(movement, divisions.hundreds, height),
+            hundreds: this.calculateStripPosition(movement, divisions.tens, height),
+            tens: this.calculateStripPosition(movement, divisions.units, height),
         };
     },
 
@@ -40,10 +40,11 @@ const Counter = React.createClass({
         };
 
         const digitHeight = 60;
-        const stripPositions = this.calculateStripPositions(this.props, digitHeight);
+        const stripPositions = this.calculateStripPositions(this.props.movement, this.props, digitHeight);
 
         const digitStyle = {
             height: `{digitHeight}px`,
+            // Can't use string interpolation on a React CSS property name if the original CSS property is hyphenated (in this case "font-size").
             fontSize: digitHeight + "px",
         };
 
