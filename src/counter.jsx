@@ -9,18 +9,18 @@ const Counter = React.createClass({
             : Math.abs((range / 10) * (subDivision - 10)) - range;
     },
 
-    calculateStripPositions(currentDivisions, targetDivisions, movement, range) {
+    calculateStripPositions(currentDivisions, newDivisions, movement, range) {
         return {
             thousands:
-                targetDivisions.thousands === currentDivisions.thousands
+                newDivisions.thousands === currentDivisions.thousands
                     ? 0
                     : this.calculateStripPosition(movement, currentDivisions.hundreds, range),
             hundreds:
-                targetDivisions.hundreds == currentDivisions.hundreds
+                newDivisions.hundreds == currentDivisions.hundreds
                     ? 0
                     : this.calculateStripPosition(movement, currentDivisions.tens, range),
             tens:
-                targetDivisions.tens === currentDivisions.tens
+                newDivisions.tens === currentDivisions.tens
                     ? 0
                     : this.calculateStripPosition(movement, currentDivisions.units, range),
         };
@@ -38,7 +38,7 @@ const Counter = React.createClass({
             units: Math.floor(this.props.currentCount % 10),
         };
 
-        const targetDivisions = {
+        const newDivisions = {
             thousands: Math.floor((this.props.newCount % 10000) / 1000),
             hundreds: Math.floor((this.props.newCount / 100) % 10),
             tens: Math.floor((this.props.newCount / 10) % 10),
@@ -75,7 +75,7 @@ const Counter = React.createClass({
         };
 
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
-        const stripPositions = this.calculateStripPositions(currentDivisions, targetDivisions, movement, digitHeight);
+        const stripPositions = this.calculateStripPositions(currentDivisions, newDivisions, movement, digitHeight);
 
         return (
             <div>
