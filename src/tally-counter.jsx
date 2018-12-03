@@ -7,7 +7,7 @@ const TallyCounter = React.createClass({
 
     getInitialState: () => ({
         newTally: 0,
-        oldTally: 0,
+        previousTally: 0,
         tweenTally: 0,
     }),
 
@@ -27,7 +27,7 @@ const TallyCounter = React.createClass({
             endValue: newTally,
             onEnd: () => {
                 this.setState({
-                    oldTally: newTally,
+                    previousTally: newTally,
                 });
             },
         });
@@ -36,8 +36,8 @@ const TallyCounter = React.createClass({
     render() {
         const counterProps = {
             currentCount: Math.floor(this.getTweeningValue("tweenTally")),
-            oldCount: this.state.oldTally,
-            targetCount: this.state.newTally,
+            previousCount: this.state.previousTally,
+            newCount: this.state.newTally,
         };
 
         return (
