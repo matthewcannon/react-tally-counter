@@ -21,48 +21,41 @@ const Counter = React.createClass({
 
     calculateStripPositions(currentDigits, newDigits, movement, range) {
         // REFACTOR: Recursive function over collection.
-        return {
-            thousands:
-                newDigits.thousands === currentDigits.thousands
-                    ? 0
-                    : this.calculateStripPosition(movement, currentDigits.hundreds, range),
-            hundreds:
-                newDigits.hundreds == currentDigits.hundreds
-                    ? 0
-                    : this.calculateStripPosition(movement, currentDigits.tens, range),
-            tens:
-                newDigits.tens === currentDigits.tens
-                    ? 0
-                    : this.calculateStripPosition(movement, currentDigits.units, range),
-        };
+        return [
+            newDigits.thousands === currentDigits.thousands
+                ? 0
+                : this.calculateStripPosition(movement, currentDigits.hundreds, range),
+            newDigits.hundreds == currentDigits.hundreds
+                ? 0
+                : this.calculateStripPosition(movement, currentDigits.tens, range),
+            newDigits.tens === currentDigits.tens
+                ? 0
+                : this.calculateStripPosition(movement, currentDigits.units, range),
+            0,
+        ];
     },
 
     deriveMovement(previousCount, newCount) {
         return previousCount === newCount ? "none" : previousCount > newCount ? "up" : "down";
     },
 
-    makeRoll(digits) {
+    makeRows(digits) {
         // REFACTOR: Recursive function over collection.
-        return {
-            low: {
-                thousands: digits.thousands === 0 ? 9 : digits.thousands - 1,
-                hundreds: digits.hundreds === 0 ? 9 : digits.hundreds - 1,
-                tens: digits.tens === 0 ? 9 : digits.tens - 1,
-                units: digits.units === 0 ? 9 : digits.units - 1,
-            },
-            current: {
-                thousands: digits.thousands,
-                hundreds: digits.hundreds,
-                tens: digits.tens,
-                units: digits.units,
-            },
-            high: {
-                thousands: digits.thousands === 9 ? 0 : digits.thousands + 1,
-                hundreds: digits.hundreds === 9 ? 0 : digits.hundreds + 1,
-                tens: digits.tens === 9 ? 0 : digits.tens + 1,
-                units: digits.units === 9 ? 0 : digits.units + 1,
-            },
-        };
+        return [
+            [
+                digits.thousands === 0 ? 9 : digits.thousands - 1,
+                digits.hundreds === 0 ? 9 : digits.hundreds - 1,
+                digits.tens === 0 ? 9 : digits.tens - 1,
+                digits.units === 0 ? 9 : digits.units - 1,
+            ],
+            [digits.thousands, digits.hundreds, digits.tens, digits.units],
+            [
+                digits.thousands === 9 ? 0 : digits.thousands + 1,
+                digits.hundreds === 9 ? 0 : digits.hundreds + 1,
+                digits.tens === 9 ? 0 : digits.tens + 1,
+                digits.units === 9 ? 0 : digits.units + 1,
+            ],
+        ];
     },
 
     render() {
@@ -70,7 +63,7 @@ const Counter = React.createClass({
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
         // REFACTOR: Compose chain.
         const currentDigits = this.deriveDigits(this.props.currentCount);
-        const roll = this.makeRoll(currentDigits);
+        const roll = this.makeRows(currentDigits);
         const digitHeight = 60;
         const stripPositions = this.calculateStripPositions(currentDigits, newDigits, movement, digitHeight);
 
@@ -80,55 +73,21 @@ const Counter = React.createClass({
             fontSize: digitHeight + "px",
         };
 
-        // REFACTOR: Loop over collection.
-        return (
-            <div>
-                <div style={{ position: "relative", float: "left", top: stripPositions.thousands + "px" }}>
-                    <div style={digitStyle}>
-                        <span>{roll.low.thousands}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.current.thousands}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.high.thousands}</span>
-                    </div>
+        const digits = stripIndex => {
+            return roll.map((row, index) => (
+                <div key={index} style={digitStyle}>
+                    <span>{row[stripIndex]}</span>
                 </div>
-                <div style={{ position: "relative", float: "left", top: stripPositions.hundreds + "px" }}>
-                    <div style={digitStyle}>
-                        <span>{roll.low.hundreds}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.current.hundreds}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.high.hundreds}</span>
-                    </div>
-                </div>
-                <div style={{ position: "relative", float: "left", top: stripPositions.tens + "px" }}>
-                    <div style={digitStyle}>
-                        <span>{roll.low.tens}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.current.tens}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.high.tens}</span>
-                    </div>
-                </div>
-                <div style={{ position: "relative", float: "left" }}>
-                    <div style={digitStyle}>
-                        <span>{roll.low.units}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.current.units}</span>
-                    </div>
-                    <div style={digitStyle}>
-                        <span>{roll.high.units}</span>
-                    </div>
-                </div>
+            ));
+        };
+
+        const strips = stripPositions.map((strip, index) => (
+            <div key={index} style={{ position: "relative", float: "left", top: strip + "px" }}>
+                {digits(index)}
             </div>
-        );
+        ));
+
+        return <div>{strips}</div>;
     },
 });
 
