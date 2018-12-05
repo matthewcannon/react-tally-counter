@@ -1,28 +1,39 @@
 import React from "react";
 
 const Counter = React.createClass({
-    calculateStripPosition(movement, subDivision, range) {
+    deriveDigits(number) {
+        return {
+            thousands: Math.floor((number % 10000) / 1000),
+            hundreds: Math.floor((number / 100) % 10),
+            tens: Math.floor((number / 10) % 10),
+            units: Math.floor(number % 10),
+        };
+    },
+
+    calculateStripPosition(movement, subDigit, range) {
+        // REFACTOR: Pattern-matching.
         return movement === "none"
             ? 0
             : movement === "up"
-            ? -Math.abs((range / 10) * subDivision)
-            : Math.abs((range / 10) * (subDivision - 10)) - range;
+            ? -Math.abs((range / 10) * subDigit)
+            : Math.abs((range / 10) * (subDigit - 10)) - range;
     },
 
-    calculateStripPositions(currentDivisions, newDivisions, movement, range) {
+    calculateStripPositions(currentDigits, newDigits, movement, range) {
+        // REFACTOR: Recursive function over collection.
         return {
             thousands:
-                newDivisions.thousands === currentDivisions.thousands
+                newDigits.thousands === currentDigits.thousands
                     ? 0
-                    : this.calculateStripPosition(movement, currentDivisions.hundreds, range),
+                    : this.calculateStripPosition(movement, currentDigits.hundreds, range),
             hundreds:
-                newDivisions.hundreds == currentDivisions.hundreds
+                newDigits.hundreds == currentDigits.hundreds
                     ? 0
-                    : this.calculateStripPosition(movement, currentDivisions.tens, range),
+                    : this.calculateStripPosition(movement, currentDigits.tens, range),
             tens:
-                newDivisions.tens === currentDivisions.tens
+                newDigits.tens === currentDigits.tens
                     ? 0
-                    : this.calculateStripPosition(movement, currentDivisions.units, range),
+                    : this.calculateStripPosition(movement, currentDigits.units, range),
         };
     },
 
@@ -30,53 +41,50 @@ const Counter = React.createClass({
         return previousCount === newCount ? "none" : previousCount > newCount ? "up" : "down";
     },
 
-    render() {
-        const currentDivisions = {
-            thousands: Math.floor((this.props.currentCount % 10000) / 1000),
-            hundreds: Math.floor((this.props.currentCount / 100) % 10),
-            tens: Math.floor((this.props.currentCount / 10) % 10),
-            units: Math.floor(this.props.currentCount % 10),
-        };
-
-        const newDivisions = {
-            thousands: Math.floor((this.props.newCount % 10000) / 1000),
-            hundreds: Math.floor((this.props.newCount / 100) % 10),
-            tens: Math.floor((this.props.newCount / 10) % 10),
-            units: Math.floor(this.props.newCount % 10),
-        };
-
-        const roll = {
+    makeRoll(digits) {
+        // REFACTOR: Recursive function over collection.
+        return {
             low: {
-                thousands: currentDivisions.thousands === 0 ? 9 : currentDivisions.thousands - 1,
-                hundreds: currentDivisions.hundreds === 0 ? 9 : currentDivisions.hundreds - 1,
-                tens: currentDivisions.tens === 0 ? 9 : currentDivisions.tens - 1,
-                units: currentDivisions.units === 0 ? 9 : currentDivisions.units - 1,
+                thousands: digits.thousands === 0 ? 9 : digits.thousands - 1,
+                hundreds: digits.hundreds === 0 ? 9 : digits.hundreds - 1,
+                tens: digits.tens === 0 ? 9 : digits.tens - 1,
+                units: digits.units === 0 ? 9 : digits.units - 1,
             },
             current: {
-                thousands: currentDivisions.thousands,
-                hundreds: currentDivisions.hundreds,
-                tens: currentDivisions.tens,
-                units: currentDivisions.units,
+                thousands: digits.thousands,
+                hundreds: digits.hundreds,
+                tens: digits.tens,
+                units: digits.units,
             },
             high: {
-                thousands: currentDivisions.thousands === 9 ? 0 : currentDivisions.thousands + 1,
-                hundreds: currentDivisions.hundreds === 9 ? 0 : currentDivisions.hundreds + 1,
-                tens: currentDivisions.tens === 9 ? 0 : currentDivisions.tens + 1,
-                units: currentDivisions.units === 9 ? 0 : currentDivisions.units + 1,
+                thousands: digits.thousands === 9 ? 0 : digits.thousands + 1,
+                hundreds: digits.hundreds === 9 ? 0 : digits.hundreds + 1,
+                tens: digits.tens === 9 ? 0 : digits.tens + 1,
+                units: digits.units === 9 ? 0 : digits.units + 1,
             },
         };
+    },
+
+    render() {
+        const previousCount = this.props.previousCount;
+        const newCount = this.props.newCount;
+        const newDigits = this.deriveDigits(newCount);
+        const currentCount = this.props.currentCount;
+        // REFACTOR: Compose chain.
+        const currentDigits = this.deriveDigits(currentCount);
+        const roll = this.makeRoll(currentDigits);
+        const movement = this.deriveMovement(this.props.previousCount, newCount);
 
         const digitHeight = 60;
-
         const digitStyle = {
             height: `{digitHeight}px`,
             // Can't use string interpolation on a React CSS property name if the original CSS property is hyphenated (in this case "font-size").
             fontSize: digitHeight + "px",
         };
 
-        const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
-        const stripPositions = this.calculateStripPositions(currentDivisions, newDivisions, movement, digitHeight);
+        const stripPositions = this.calculateStripPositions(currentDigits, newDigits, movement, digitHeight);
 
+        // REFACTOR: Loop over collection.
         return (
             <div>
                 <div style={{ position: "relative", float: "left", top: stripPositions.thousands + "px" }}>
