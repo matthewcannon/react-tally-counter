@@ -66,23 +66,19 @@ const Counter = React.createClass({
     },
 
     render() {
-        const previousCount = this.props.previousCount;
-        const newCount = this.props.newCount;
-        const newDigits = this.deriveDigits(newCount);
-        const currentCount = this.props.currentCount;
+        const newDigits = this.deriveDigits(this.props.newCount);
+        const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
         // REFACTOR: Compose chain.
-        const currentDigits = this.deriveDigits(currentCount);
+        const currentDigits = this.deriveDigits(this.props.currentCount);
         const roll = this.makeRoll(currentDigits);
-        const movement = this.deriveMovement(this.props.previousCount, newCount);
-
         const digitHeight = 60;
+        const stripPositions = this.calculateStripPositions(currentDigits, newDigits, movement, digitHeight);
+
         const digitStyle = {
             height: `{digitHeight}px`,
             // Can't use string interpolation on a React CSS property name if the original CSS property is hyphenated (in this case "font-size").
             fontSize: digitHeight + "px",
         };
-
-        const stripPositions = this.calculateStripPositions(currentDigits, newDigits, movement, digitHeight);
 
         // REFACTOR: Loop over collection.
         return (
