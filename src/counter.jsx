@@ -1,7 +1,7 @@
 import React from "react";
 
 const Counter = React.createClass({
-    deriveDigits(number) {
+    makeDigits(number) {
         return {
             thousands: Math.floor((number % 10000) / 1000),
             hundreds: Math.floor((number / 100) % 10),
@@ -19,19 +19,34 @@ const Counter = React.createClass({
             : Math.abs((range / 10) * (subDigit - 10)) - range;
     },
 
-    calculateStripPositions(currentDigits, newDigits, movement, range) {
+    makeStrips(currentDigits, newDigits, movement, range) {
         // REFACTOR: Recursive function over collection.
         return [
-            newDigits.thousands === currentDigits.thousands
-                ? 0
-                : this.calculateStripPosition(movement, currentDigits.hundreds, range),
-            newDigits.hundreds == currentDigits.hundreds
-                ? 0
-                : this.calculateStripPosition(movement, currentDigits.tens, range),
-            newDigits.tens === currentDigits.tens
-                ? 0
-                : this.calculateStripPosition(movement, currentDigits.units, range),
-            0,
+            {
+                position: 0,
+                offset:
+                    newDigits.thousands === currentDigits.thousands
+                        ? 0
+                        : this.calculateStripPosition(movement, currentDigits.hundreds, range),
+            },
+            {
+                position: 1,
+                offset:
+                    newDigits.hundreds == currentDigits.hundreds
+                        ? 0
+                        : this.calculateStripPosition(movement, currentDigits.tens, range),
+            },
+            {
+                position: 2,
+                offset:
+                    newDigits.tens === currentDigits.tens
+                        ? 0
+                        : this.calculateStripPosition(movement, currentDigits.units, range),
+            },
+            {
+                position: 3,
+                offset: 0,
+            },
         ];
     },
 
@@ -59,31 +74,22 @@ const Counter = React.createClass({
     },
 
     render() {
-        const newDigits = this.deriveDigits(this.props.newCount);
+        const newDigits = this.makeDigits(this.props.newCount);
+        const currentDigits = this.makeDigits(this.props.currentCount);
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
-        // REFACTOR: Compose chain.
-        const currentDigits = this.deriveDigits(this.props.currentCount);
-        const roll = this.makeRows(currentDigits);
-        const digitHeight = 60;
-        const stripPositions = this.calculateStripPositions(currentDigits, newDigits, movement, digitHeight);
+        const rows = this.makeRows(currentDigits);
+        const columns = this.makeStrips(currentDigits, newDigits, movement, this.props.height);
 
-        const digitStyle = {
-            height: `{digitHeight}px`,
-            // Can't use string interpolation on a React CSS property name if the original CSS property is hyphenated (in this case "font-size").
-            fontSize: digitHeight + "px",
-        };
-
-        const digits = stripIndex => {
-            return roll.map((row, index) => (
-                <div key={index} style={digitStyle}>
-                    <span>{row[stripIndex]}</span>
+        const digits = strip =>
+            rows.map((row, index) => (
+                <div key={index} style={{ height: this.props.height + "px", fontSize: this.props.height + "px" }}>
+                    <span>{row[strip.position]}</span>
                 </div>
             ));
-        };
 
-        const strips = stripPositions.map((strip, index) => (
-            <div key={index} style={{ position: "relative", float: "left", top: strip + "px" }}>
-                {digits(index)}
+        const strips = columns.map((strip, index) => (
+            <div key={index} style={{ position: "relative", float: "left", top: strip.offset + "px" }}>
+                {digits(strip)}
             </div>
         ));
 
@@ -95,6 +101,7 @@ Counter.propTypes = {
     currentCount: React.PropTypes.number.isRequired,
     previousCount: React.PropTypes.number.isRequired,
     newCount: React.PropTypes.number.isRequired,
+    height: React.PropTypes.number.isRequired,
 };
 
 export default Counter;

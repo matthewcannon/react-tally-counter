@@ -38,6 +38,7 @@ const TallyCounter = React.createClass({
             currentCount: Math.floor(this.getTweeningValue("tweenTally")),
             previousCount: this.state.previousTally,
             newCount: this.state.newTally,
+            height: 60,
         };
 
         return (
