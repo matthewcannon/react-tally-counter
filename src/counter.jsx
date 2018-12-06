@@ -19,7 +19,7 @@ const Counter = React.createClass({
             : Math.abs((range / 10) * (subDigit - 10)) - range;
     },
 
-    makeStrips(currentDigits, newDigits, movement, range) {
+    makeColumns(currentDigits, newDigits, movement, range) {
         // REFACTOR: Recursive function over collection.
         return [
             {
@@ -78,17 +78,34 @@ const Counter = React.createClass({
         const currentDigits = this.makeDigits(this.props.currentCount);
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
         const rows = this.makeRows(currentDigits);
-        const columns = this.makeStrips(currentDigits, newDigits, movement, this.props.height);
+        const columns = this.makeColumns(currentDigits, newDigits, movement, this.props.height);
 
         const digits = strip =>
             rows.map((row, index) => (
-                <div key={index} style={{ height: this.props.height + "px", fontSize: this.props.height + "px" }}>
+                <div
+                    key={index}
+                    style={{
+                        height: this.props.height + "px",
+                        fontSize: this.props.height + "px",
+                        borderStyle: "groove",
+                        borderColor: "lightgoldenrodyellow",
+                    }}
+                >
                     <span>{row[strip.position]}</span>
                 </div>
             ));
 
         const strips = columns.map((strip, index) => (
-            <div key={index} style={{ position: "relative", float: "left", top: strip.offset + "px" }}>
+            <div
+                key={index}
+                style={{
+                    position: "relative",
+                    float: "left",
+                    top: strip.offset + "px",
+                    borderStyle: "groove",
+                    borderColor: "lightgoldenrodyellow",
+                }}
+            >
                 {digits(strip)}
             </div>
         ));
