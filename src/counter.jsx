@@ -19,33 +19,33 @@ const Counter = React.createClass({
             : Math.abs((range / 10) * (subDigit - 10)) - range;
     },
 
-    makeColumns(currentDigits, newDigits, movement, range) {
+    buildColumns(currentDigits, newDigits, movement, range) {
         // REFACTOR: Recursive function over collection.
         return [
             {
-                position: 0,
-                offset:
+                index: 0,
+                position:
                     newDigits.thousands === currentDigits.thousands
                         ? 0
                         : this.calculateStripPosition(movement, currentDigits.hundreds, range),
             },
             {
-                position: 1,
-                offset:
+                index: 1,
+                position:
                     newDigits.hundreds == currentDigits.hundreds
                         ? 0
                         : this.calculateStripPosition(movement, currentDigits.tens, range),
             },
             {
-                position: 2,
-                offset:
+                index: 2,
+                position:
                     newDigits.tens === currentDigits.tens
                         ? 0
                         : this.calculateStripPosition(movement, currentDigits.units, range),
             },
             {
-                position: 3,
-                offset: 0,
+                index: 3,
+                position: 0,
             },
         ];
     },
@@ -54,7 +54,7 @@ const Counter = React.createClass({
         return previousCount === newCount ? "none" : previousCount > newCount ? "up" : "down";
     },
 
-    makeRows(digits) {
+    buildRows(digits) {
         // REFACTOR: Recursive function over collection.
         return [
             [
@@ -77,8 +77,8 @@ const Counter = React.createClass({
         const newDigits = this.makeDigits(this.props.newCount);
         const currentDigits = this.makeDigits(this.props.currentCount);
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
-        const rows = this.makeRows(currentDigits);
-        const columns = this.makeColumns(currentDigits, newDigits, movement, this.props.height);
+        const rows = this.buildRows(currentDigits);
+        const columns = this.buildColumns(currentDigits, newDigits, movement, this.props.height);
 
         const digits = strip =>
             rows.map((row, index) => (
@@ -91,7 +91,7 @@ const Counter = React.createClass({
                         borderColor: "lightgoldenrodyellow",
                     }}
                 >
-                    <span>{row[strip.position]}</span>
+                    <span>{row[strip.index]}</span>
                 </div>
             ));
 
@@ -101,7 +101,7 @@ const Counter = React.createClass({
                 style={{
                     position: "relative",
                     float: "left",
-                    top: strip.offset + "px",
+                    top: strip.position + "px",
                     borderStyle: "groove",
                     borderColor: "lightgoldenrodyellow",
                 }}
