@@ -14,7 +14,7 @@
         "build": "npm run prettier && npm run jest && npm run babel && npm run pack && npm run sass && npm run copy-images",
         "clean": "rm -rf ./lib && rm -rf ./public && rm -rf ./coverage && rm -rf .cache",
         "copy-images": "mkdir -p ./public/image/ && cp ./src/image/* ./public/image/",
-        "jest": "jest --coverage",
+        "jest": "jest ./test/*.test.js --coverage",
         "lint": "eslint --ext .js --ext .jsx ./src test",
         "pack": "webpack --mode development --entry ./src/index.jsx --output ./public/bundle.js",
         "prelint": "npm run prettier",
@@ -24,9 +24,7 @@
         "serve": "live-server ./public",
         "start": "npm run clean && npm run build && npm run serve",
         "test": "npm run prettier && npm run jest && npm run lint",
-        "watch": "npm run watch:css && npm run watch:js",
-        "watch:css": "onchange -i './src/style/*.scss' -- npm run sass",
-        "watch:js": "onchange -i './src/**/*.js' 'src/**/*.jsx' -- npm run build"
+        "watch": "onchange -i './test/**/*.js' './src/**/*.js' './src/**/*.jsx' -- npm run build"
     },
     "dependencies": {
         "@babel/polyfill": "^7.0.0",
