@@ -1,7 +1,15 @@
 describe("Building a model", () => {
-    const buildColumns = (length = 1) => Array.from({ length }, (value, index) => ({ index }));
+    describe("Building rows", () => {
+        const buildRows = (length = 1) => Array.from({ length }, (value, index) => ({}));
+
+        test("Builds one row", () => {
+            expect(buildRows().length).toBe(1);
+        });
+    });
 
     describe("Building columns", () => {
+        const buildColumns = (length = 1) => Array.from({ length }, (value, index) => ({ index }));
+
         test("Builds one column", () => {
             expect(buildColumns().length).toBe(1);
         });
