@@ -1,15 +1,5 @@
 describe("Building a view model", () => {
-    const buildColumns = (index = 0, length = 1) => {
-        let array = [];
-
-        for (var i = index; i < length; ++i) {
-            array.push({
-                index: i,
-            });
-        }
-
-        return array;
-    };
+    const buildColumns = (length = 1) => Array.from({ length: length }, (value, index) => ({ index }));
 
     describe("Building columns", () => {
         test("Builds one column", () => {
@@ -17,14 +7,25 @@ describe("Building a view model", () => {
         });
 
         test("Builds a column with an index", () => {
-            const index = 0;
-            expect(buildColumns(index)[0].index).toEqual(index);
+            expect(buildColumns()[0].index).toEqual(0);
         });
 
         test("Builds 2 columns", () => {
-            const index = 0;
             const length = 2;
-            expect(buildColumns(index, length).length).toBe(2);
+            expect(buildColumns(length).length).toBe(length);
+        });
+
+        test("Builds 2 columns with indices", () => {
+            const length = 2;
+            const columns = buildColumns(length);
+            expect(columns.length).toBe(length);
+            expect(columns[0].index).toEqual(0);
+            expect(columns[1].index).toEqual(1);
+        });
+
+        test("Builds 2 columns", () => {
+            const length = 2;
+            expect(buildColumns(length).length).toBe(length);
         });
     });
 });
