@@ -1,7 +1,7 @@
 import React from "react";
 
 const Counter = React.createClass({
-    makeDigits(number) {
+    digitize(number) {
         return {
             thousands: Math.floor((number % 10000) / 1000),
             hundreds: Math.floor((number / 100) % 10),
@@ -74,9 +74,9 @@ const Counter = React.createClass({
     },
 
     render() {
-        const newDigits = this.makeDigits(this.props.newCount);
-        const currentDigits = this.makeDigits(this.props.currentCount);
         const movement = this.deriveMovement(this.props.previousCount, this.props.newCount);
+        const newDigits = this.digitize(this.props.newCount);
+        const currentDigits = this.digitize(this.props.currentCount);
         const rows = this.buildRows(currentDigits);
         const columns = this.buildColumns(currentDigits, newDigits, movement, this.props.height);
 
