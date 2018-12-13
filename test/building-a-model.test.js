@@ -1,21 +1,24 @@
 describe("Building a model", () => {
     describe("Building rows", () => {
-        const buildRows = (length = 1) => Array.from({ length }, (value, index) => ({}));
+        const buildRows = length => Array.from({ length }, (value, index) => ({}));
 
         test("Builds one row", () => {
-            expect(buildRows().length).toBe(1);
+            const length = 1;
+            expect(buildRows(length).length).toBe(length);
         });
     });
 
     describe("Building columns", () => {
-        const buildColumns = (length = 1) => Array.from({ length }, (value, index) => ({ index }));
+        const buildColumns = length => Array.from({ length }, (value, index) => ({ index }));
 
         test("Builds one column", () => {
-            expect(buildColumns().length).toBe(1);
+            const length = 1;
+            expect(buildColumns(length).length).toBe(length);
         });
 
-        test("Builds a column with an index", () => {
-            expect(buildColumns()[0].index).toEqual(0);
+        test("Builds a column with a zero-based index", () => {
+            const length = 1;
+            expect(buildColumns(length)[0].index).toEqual(length - 1);
         });
 
         test("Builds 2 columns", () => {
