@@ -1,4 +1,4 @@
-describe("Building a view model", () => {
+describe("Building a model", () => {
     const buildColumns = (length = 1) => Array.from({ length }, (value, index) => ({ index }));
 
     describe("Building columns", () => {
