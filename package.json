@@ -29,6 +29,7 @@
     "dependencies": {
         "@babel/polyfill": "^7.0.0",
         "@babel/runtime": "^7.1.5",
+        "ramda": "^0.26.1",
         "react": "0.14.7",
         "react-tween-state": "^0.1.5"
     },
