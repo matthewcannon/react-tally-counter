@@ -11,5 +11,5 @@ export function digitize(number) {
 }
 
 export function matricize(digits) {
-    return R.map(digit => [digit - 1, digit, digit + 1], digits);
+    return R.map(digit => [digit === 0 ? 9 : digit - 1, digit, digit === 9 ? 0 : digit + 1], digits);
 }

@@ -28,4 +28,8 @@ describe("Matricizing digits", () => {
     test("Matricizes one digit with lower wrapping", () => {
         expect(matricize([0])).toEqual([[9, 0, 1]]);
     });
+
+    test("Matricizes several digits with upper and lower wrapping", () => {
+        expect(matricize([1, 0, 5, 9])).toEqual([[0, 1, 2], [9, 0, 1], [4, 5, 6], [8, 9, 0]]);
+    });
 });
