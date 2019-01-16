@@ -1,6 +1,6 @@
 import { digitize } from "../src/number";
 
-describe("Digitizing a number", () => {
+describe("Digitize", () => {
     test("Ignores undefined", () => {
         expect(digitize(undefined)).toEqual([]);
     });

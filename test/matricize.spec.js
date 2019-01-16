@@ -1,6 +1,6 @@
 import { matricize } from "../src/number";
 
-describe("Matricizing digits", () => {
+describe("Matricize", () => {
     test("Doesn't matricize an object", () => {
         expect(matricize({})).toEqual({});
     });
