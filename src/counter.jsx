@@ -1,10 +1,13 @@
 import React from "react";
+import * as R from "ramda";
 import { digitize, matricize } from "./number";
 
 const Counter = React.createClass({
     render() {
-        const currentDigits = digitize(this.props.currentCount);
-        const matrix = matricize(currentDigits);
+        const matrix = R.compose(
+            matricize,
+            digitize,
+        )(this.props.currentCount);
 
         const digits = column =>
             column.map(digit => (
