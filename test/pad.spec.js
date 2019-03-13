@@ -1,5 +1,3 @@
-import * as R from "ramda";
-
 describe("pad", () => {
     const pad = (number, length) => {
         const spaces = "0".repeat(length);

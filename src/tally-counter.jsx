@@ -1,6 +1,7 @@
 import React from "react";
 import Counter from "./counter.jsx";
-var tweenState = require("react-tween-state");
+
+const tweenState = require("react-tween-state");
 
 const TallyCounter = React.createClass({
     mixins: [tweenState.Mixin],
@@ -18,9 +19,7 @@ const TallyCounter = React.createClass({
     setNewTally() {
         const newTally = Math.floor(Math.random() * 5000);
 
-        this.setState({
-            newTally: newTally,
-        });
+        this.setState({ newTally });
 
         this.tweenState("tweenTally", {
             duration: 3000,

@@ -1,17 +1,21 @@
 {
-    "env": { "es6": true },
-    "extends": ["plugin:prettier/recommended"],
-    "parserOptions": {
-        "sourceType": "module",
-        "ecmaVersion": 2017
-    },
-    "plugins": ["no-only-tests", "eslint-prettier-react", "async"],
+    "extends": ["airbnb", "prettier", "prettier/react"],
+    "plugins": ["react", "import", "prettier"],
+    "parser": "babel-eslint",
     "rules": {
-        "quotes": ["error", "double"],
-        "semi": ["error", "always"],
-        "no-undef": [0],
-        "no-console": ["warn"],
-        "no-only-tests/no-only-tests": [2],
-        "async/missing-await-in-async-fn": 1
+        "prettier/prettier": ["error", { "trailingComma": "all", "tabWidth": 4, "printWidth": 120 }],
+        "import/prefer-default-export": "off",
+        "import/no-named-as-default": "off",
+        "import/no-named-as-default-member": "off",
+        "react/no-render-return-value": "off",
+        "react/destructuring-assignment": "off",
+        "react/forbid-prop-types": "off",
+        "react/no-deprecated": "off",
+        "react/jsx-filename-extension": "off",
+        "no-undef": "off",
+        "no-shadow": "off"
+    },
+    "env": {
+        "jest": true
     }
 }
